@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pinnie's Finance Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#F4F6F5;color:#1E1E1C;min-height:100vh}
+.wrap{max-width:700px;margin:0 auto;padding:16px}
+.hdr{background:#0F6E56;border-radius:14px 14px 0 0;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.hdr-title{color:#fff;font-size:18px;font-weight:700}
+.hdr-sub{color:rgba(255,255,255,.6);font-size:12px;margin-top:1px}
+.hdr-btns{display:flex;gap:8px;flex-wrap:wrap}
+.hdr-btn{padding:5px 12px;border-radius:8px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;font-size:12px;cursor:pointer}
+.hdr-btn.red{border-color:#F5C4B3;color:#F5C4B3}
+.tabs{display:flex;background:#085041;overflow-x:auto}
+.tab-btn{flex:1;padding:11px 6px;background:none;border:none;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;border-bottom:3px solid transparent;font-weight:500;white-space:nowrap;min-width:60px}
+.tab-btn.on{color:#fff;border-bottom:3px solid #E07040;font-weight:700}
+.body{background:#F4F6F5;padding:16px;border-radius:0 0 14px 14px;min-height:480px}
+.card{background:#fff;border-radius:12px;border:1px solid #E2E0D8;padding:16px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8A8880;margin-bottom:12px}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #F2F0EA}
+.brow:last-child{border-bottom:none}
+.brow-label{font-size:14px;color:#2C2C2A}
+.brow-right{display:flex;align-items:center;gap:10px}
+.brow-actual{font-size:15px;font-weight:600}
+.brow-budget{font-size:12px;color:#9A9890}
+.pill{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.pill-ok{background:#E1F5EE;color:#0A5C44}
+.pill-over{background:#FAECE7;color:#C04A20}
+.pbar-wrap{margin-bottom:8px}
+.pbar-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.pbar-track{background:#EEF0ED;border-radius:6px;height:7px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:6px}
+.acc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:480px){.acc-grid{grid-template-columns:1fr}}
+.acc{border-radius:12px;padding:14px;color:#fff;cursor:pointer}
+.acc.holiday{background:linear-gradient(135deg,#0F6E56,#1A9E75)}
+.acc.selfdev{background:linear-gradient(135deg,#185FA5,#2E84D4)}
+.acc.emergency{background:linear-gradient(135deg,#3B6D11,#5A9E1A)}
+.acc.play{background:linear-gradient(135deg,#BA7517,#E09A30)}
+.acc-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;opacity:.8;margin-bottom:6px}
+.acc-bal{font-size:28px;font-weight:700}
+.acc-meta{display:flex;justify-content:space-between;font-size:11px;opacity:.7;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2)}
+.ledger-panel{display:none}
+.ledger-panel.open{display:block}
+.ledger-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F2F0EA;font-size:13px}
+.ledger-row:last-child{border-bottom:none}
+.cr{color:#0A5C44;font-weight:600}
+.dr{color:#C04A20;font-weight:600}
+.del{background:none;border:none;color:#E24B4A;cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
+.add-fab{width:100%;padding:14px;border-radius:12px;border:2px dashed #0F6E56;background:transparent;color:#0F6E56;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px}
+.add-fab:hover{background:#E1F5EE}
+.tx-form{display:none;background:#fff;border-radius:12px;border:1px solid #E2E0D8;padding:16px;margin-bottom:12px}
+.tx-form.open{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.fld label{font-size:12px;color:#8A8880;display:block;margin-bottom:4px}
+.fld input,.fld select,.fld textarea{width:100%;padding:9px 10px;border:1px solid #D8D6CE;border-radius:8px;font-size:14px;color:#1E1E1C;background:#fff;outline:none}
+.fld input:focus,.fld select:focus{border-color:#0F6E56}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.btn{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none}
+.btn-primary{background:#0F6E56;color:#fff}
+.btn-ghost{background:#F4F6F5;color:#5F5E5A;border:1px solid #D8D6CE}
+.btn-sm{padding:6px 12px;font-size:12px}
+.tx-list{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:7px 10px;text-align:left;font-size:11px;font-weight:700;color:#8A8880;text-transform:uppercase;letter-spacing:.5px;background:#F9F8F5;border-bottom:1px solid #E2E0D8}
+td{padding:8px 10px;border-bottom:1px solid #F2F0EA;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.type-chip{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:520px){.stat-row{grid-template-columns:repeat(4,1fr)}}
+.stat{background:#fff;border-radius:12px;border:1px solid #E2E0D8;padding:12px 14px}
+.stat-lbl{font-size:11px;color:#8A8880;margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:700}
+.stat-sub{font-size:11px;color:#9A9890;margin-top:2px}
+.income-display{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.income-big{background:#085041;color:#fff;font-size:22px;font-weight:700;padding:8px 16px;border-radius:10px}
+.edit-link{font-size:12px;color:#0F6E56;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0}
+.income-edit-form{display:none;margin-top:10px}
+.income-edit-form.open{display:block}
+.wf-hint{background:#E1F5EE;border-left:3px solid #0F6E56;padding:8px 12px;border-radius:0 8px 8px 0;font-size:12px;color:#085041;margin-bottom:10px;line-height:1.5}
+.credit-btn{font-size:11px;padding:3px 10px;border-radius:20px;background:#E1F5EE;color:#0A5C44;border:1px solid #9ADBC4;cursor:pointer;font-weight:600}
+.credited-lbl{font-size:11px;color:#8A8880;font-style:italic}
+.empty{text-align:center;color:#9A9890;font-size:14px;padding:2rem 1rem}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:560px;margin:auto}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:13px;color:#8A8880;margin-bottom:20px}
+.ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+@media(max-width:440px){.ob-grid{grid-template-columns:1fr}}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #D8D6CE;background:#fff;color:#5F5E5A}
+.filter-btn.on{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.donut-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px}
+@media(max-width:480px){.donut-wrap{grid-template-columns:1fr}}
+.donut-card{background:#fff;border-radius:12px;border:1px solid #E2E0D8;padding:16px}
+.donut-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8A8880;margin-bottom:12px;text-align:center}
+.donut-container{position:relative;width:140px;height:140px;margin:0 auto 12px}
+.donut-container svg{width:140px;height:140px}
+.donut-centre{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.donut-centre-val{font-size:16px;font-weight:700;color:#1E1E1C}
+.donut-centre-lbl{font-size:10px;color:#8A8880}
+.legend{display:flex;flex-direction:column;gap:5px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-pct{margin-left:auto;font-weight:600;color:#1E1E1C}
+.step-num{background:#0F6E56;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-right:8px;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <div class="hdr-title">💰 Pinnie's Finance Hub</div>
+      <div class="hdr-sub">Budget · Savings · Tracker · Dashboard</div>
+    </div>
+    <div class="hdr-btns" id="hdr-btns"></div>
+  </div>
+  <div class="tabs" id="tab-bar"></div>
+  <div class="body">
+    <div id="tab-budget"></div>
+    <div id="tab-savings"   style="display:none"></div>
+    <div id="tab-tracker"   style="display:none"></div>
+    <div id="tab-dashboard" style="display:none"></div>
+    <div id="tab-settings"  style="display:none"></div>
+  </div>
+</div>
+
+<!-- reset overlay -->
+<div class="overlay" id="reset-overlay">
+  <div class="modal">
+    <div class="modal-title">Reset all data?</div>
+    <div class="modal-sub">This permanently deletes all transactions, savings, and casual income. Cannot be undone.</div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="reset-cancel">Cancel</button>
+      <button class="btn btn-primary" id="reset-confirm" style="background:#C04A20">Yes, reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- export overlay -->
+<div class="overlay" id="export-overlay">
+  <div class="modal">
+    <div class="modal-title">Export Data</div>
+    <div class="modal-sub">Copy the JSON below. When running as a local HTML file this downloads automatically.</div>
+    <textarea id="export-ta" style="width:100%;height:200px;font-size:11px;font-family:monospace;padding:8px;border:1px solid #D8D6CE;border-radius:8px;resize:none;margin-bottom:12px"></textarea>
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="export-close">Close</button>
+      <button class="btn btn-primary" id="export-copy">Copy All</button>
+    </div>
+  </div>
+</div>
+
+<!-- import overlay -->
+<div class="overlay" id="import-overlay">
+  <div class="modal">
+    <div class="modal-title">📂 Import Data</div>
+    <div class="modal-sub">Select a JSON file exported from another device. Data will be merged — no duplicates created.</div>
+    <div style="margin-bottom:16px">
+      <input type="file" id="import-file" accept=".json" style="width:100%;padding:10px;border:2px dashed #D8D6CE;border-radius:8px;font-size:13px;cursor:pointer;background:#F9F8F5">
+    </div>
+    <div id="import-preview" style="display:none;background:#F9F8F5;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px"></div>
+    <div id="import-error"   style="display:none;background:#FAECE7;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:#C04A20"></div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="import-cancel">Cancel</button>
+      <button class="btn btn-primary" id="import-confirm" style="display:none">Merge &amp; Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- opening balances overlay -->
+<div class="overlay" id="ob-overlay">
+  <div class="modal">
+    <div class="modal-title">📂 Opening Balances</div>
+    <div class="modal-sub">Enter figures from your previous logbook. Leave at $0 if not applicable.</div>
+    <div style="font-size:12px;font-weight:700;color:#5F5E5A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Savings Accounts</div>
+    <div class="ob-grid">
+      <div class="fld"><label>🏖 Holiday ($)</label><input type="number" id="ob-holiday" value="0"></div>
+      <div class="fld"><label>📚 Self-Dev ($)</label><input type="number" id="ob-selfdev" value="0"></div>
+      <div class="fld"><label>🛡 Emergency Fund ($)</label><input type="number" id="ob-emergency" value="0"></div>
+      <div class="fld"><label>🎉 Play / Fun ($)</label><input type="number" id="ob-play" value="0"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#5F5E5A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Investments</div>
+    <div class="ob-grid">
+      <div class="fld"><label>📈 Superannuation ($)</label><input type="number" id="ob-sup" value="0"></div>
+      <div class="fld"><label>📊 ETF ($)</label><input type="number" id="ob-etf" value="0"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#5F5E5A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Expenses (year-to-date)</div>
+    <div class="ob-grid">
+      <div class="fld"><label>Mortgage ($)</label><input type="number" id="ob-mortgage" value="0"></div>
+      <div class="fld"><label>Fixed Bills ($)</label><input type="number" id="ob-fixedbills" value="0"></div>
+      <div class="fld"><label>Variable Bills ($)</label><input type="number" id="ob-varbills" value="0"></div>
+      <div class="fld"><label>Subscriptions ($)</label><input type="number" id="ob-subs" value="0"></div>
+      <div class="fld"><label>Personal Spending ($)</label><input type="number" id="ob-personal" value="0"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#5F5E5A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Income</div>
+    <div class="ob-grid">
+      <div class="fld"><label>Casual Income to date ($)</label><input type="number" id="ob-casual" value="0"></div>
+      <div class="fld"><label>As of date</label><input type="date" id="ob-date"></div>
+    </div>
+    <div style="font-size:12px;color:#8A8880;background:#F9F8F5;padding:10px;border-radius:8px;margin-bottom:16px">Stored as a single opening balance entry. Won't clutter your transaction list.</div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" id="ob-cancel">Cancel</button>
+      <button class="btn btn-primary" id="ob-save">Save Opening Balances</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────────────────────
+const B={mortgage:460,bills:380,personalSpending:460,play:150.10,emergency:64,sup:200,etf:200};
+const ACCS=[
+  {key:"holiday",  label:"Holiday",       icon:"🏖",cls:"holiday",  auto:false,budget:0},
+  {key:"selfdev",  label:"Self-Dev",       icon:"📚",cls:"selfdev",  auto:false,budget:0},
+  {key:"emergency",label:"Emergency Fund", icon:"🛡",cls:"emergency",auto:true, budget:64},
+  {key:"play",     label:"Play / Fun",     icon:"🎉",cls:"play",     auto:true, budget:150.10},
+];
+const TYPE_CATS={
+  "Income":         ["Permanent Income","Side Hustle","Other Income"],
+  "Expense":        ["Personal Spending","Other"],
+  "Fixed Bills":    ["Mortgage","Body Corporate","Council Rates","Health Insurance"],
+  "Variable Bills": ["Electricity","Water","Mobile","Internet"],
+  "Subscriptions":  ["Gmail Storage","iCloud","Streaming","Other Subscription"],
+  "Investment":     ["Superannuation","ETF"],
+  "Savings Credit": ["Holiday","Self-Development","Emergency Fund","Play / Fun"],
+  "Savings Debit":  ["Holiday","Self-Development","Emergency Fund","Play / Fun"],
+};
+const CHIP={
+  "Income":"background:#E1F5EE;color:#0A5C44",
+  "Expense":"background:#FAECE7;color:#C04A20",
+  "Fixed Bills":"background:#E6F1FB;color:#185FA5",
+  "Variable Bills":"background:#EEEDFE;color:#534AB7",
+  "Subscriptions":"background:#FEF3E2;color:#854F0B",
+  "Investment":"background:#EAF3DE;color:#3B6D11",
+  "Savings Credit":"background:#EAF3DE;color:#3B6D11",
+  "Savings Debit":"background:#FAECE7;color:#C04A20",
+};
+const CAT_TO_KEY={"Holiday":"holiday","Self-Development":"selfdev","Emergency Fund":"emergency","Play / Fun":"play"};
+const TABS=["budget","savings","tracker","dashboard","settings"];
+const TAB_LABELS={"budget":"Budget","savings":"Savings","tracker":"Tracker","dashboard":"Dashboard","settings":"⚙️ Settings"};
+
+// ── MOCK DATA ─────────────────────────────────────────────────────────────
+const MOCK_TX=[
+  {id:"t1",date:"2026-05-27",desc:"Mortgage",         type:"Fixed Bills",   category:"Mortgage",         amount:460},
+  {id:"t2",date:"2026-05-27",desc:"Electricity",      type:"Variable Bills",category:"Electricity",      amount:145},
+  {id:"t3",date:"2026-05-27",desc:"Internet",         type:"Variable Bills",category:"Internet",         amount:65},
+  {id:"t4",date:"2026-05-28",desc:"ETF contribution", type:"Investment",    category:"ETF",              amount:200},
+  {id:"t5",date:"2026-05-29",desc:"Woolworths",       type:"Expense",       category:"Personal Spending",amount:85.40},
+  {id:"t6",date:"2026-06-05",desc:"Netflix + iCloud", type:"Subscriptions", category:"Streaming",        amount:22.99},
+  {id:"t7",date:"2026-06-09",desc:"Petrol",           type:"Expense",       category:"Personal Spending",amount:65},
+  {id:"t8",date:"2026-06-09",desc:"Health Insurance", type:"Fixed Bills",   category:"Health Insurance", amount:95},
+  {id:"auto-2026-06-09-sup",date:"2026-06-09",desc:"Auto: Super salary sacrifice",type:"Investment",category:"Superannuation",amount:200},
+];
+const MOCK_LEDGER=[
+  {id:"auto-2026-05-27-emergency",date:"2026-05-27",account:"emergency",type:"credit",desc:"Auto: income 27 May",amount:64},
+  {id:"auto-2026-05-27-play",     date:"2026-05-27",account:"play",     type:"credit",desc:"Auto: income 27 May",amount:150.10},
+  {id:"auto-2026-06-09-emergency",date:"2026-06-09",account:"emergency",type:"credit",desc:"Auto: income 9 Jun", amount:64},
+  {id:"auto-2026-06-09-play",     date:"2026-06-09",account:"play",     type:"credit",desc:"Auto: income 9 Jun", amount:150.10},
+  {id:"sl5",date:"2026-05-23",account:"holiday",type:"credit",desc:"Casual waterfall",amount:50},
+  {id:"sl6",date:"2026-05-23",account:"selfdev",type:"credit",desc:"Casual waterfall",amount:100},
+  {id:"sl7",date:"2026-05-30",account:"holiday",type:"credit",desc:"Casual waterfall",amount:50},
+  {id:"sl8",date:"2026-05-30",account:"selfdev",type:"credit",desc:"Casual waterfall",amount:100},
+  {id:"sl9",date:"2026-06-01",account:"play",   type:"debit", desc:"Dinner & drinks", amount:55},
+];
+const MOCK_CASUAL=[
+  {id:"c1",date:"2026-05-23",amount:280,wfCredited:true},
+  {id:"c2",date:"2026-05-30",amount:350,wfCredited:true},
+  {id:"c3",date:"2026-06-09",amount:120,wfCredited:false},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+function loadState(){
+  try{const r=localStorage.getItem("pfh_v7");if(r)return JSON.parse(r);}catch(e){}
+  return{income:1914.10,incomeDay:"2026-06-09",transactions:[...MOCK_TX],savingsLedger:[...MOCK_LEDGER],casualIncome:[...MOCK_CASUAL],openingBalances:null,syncUrl:"",lastSynced:null};
+}
+function save(){try{localStorage.setItem("pfh_v7",JSON.stringify(S));}catch(e){}}
+let S=loadState();
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const fmt=v=>"$"+parseFloat(v||0).toFixed(2);
+const fmtN=v=>parseFloat(v||0).toFixed(2);
+const today=()=>new Date().toISOString().slice(0,10);
+const fmtD=d=>{if(!d)return"";return new Date(d+"T00:00:00").toLocaleDateString("en-AU",{day:"2-digit",month:"short",year:"numeric"});};
+const addD=(d,n)=>{const dt=new Date(d+"T00:00:00");dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);};
+
+function getCycle(){
+  const anchor=new Date(S.incomeDay+"T00:00:00");
+  const now=new Date();now.setHours(0,0,0,0);
+  const n=Math.floor(Math.max(0,(now-anchor)/86400000)/14);
+  const s=new Date(anchor);s.setDate(anchor.getDate()+n*14);
+  const st=s.toISOString().slice(0,10);
+  return{start:st,end:addD(st,13)};
+}
+function wf(amt){
+  let r=amt,h=0,sd=0,sup=0,etf=0;
+  h=Math.min(r,50);r-=h;sd=Math.min(r,100);r-=sd;
+  sup=parseFloat((r*.5).toFixed(2));etf=parseFloat((r*.5).toFixed(2));
+  return{h,sd,sup,etf};
+}
+function bal(key){return(S.openingBalances?.[key]||0)+S.savingsLedger.filter(e=>e.account===key).reduce((a,e)=>a+(e.type==="credit"?e.amount:-e.amount),0);}
+function creds(key){return(S.openingBalances?.[key]||0)+S.savingsLedger.filter(e=>e.account===key&&e.type==="credit").reduce((a,e)=>a+e.amount,0);}
+function debs(key){return S.savingsLedger.filter(e=>e.account===key&&e.type==="debit").reduce((a,e)=>a+e.amount,0);}
+function autoCredit(date){
+  if(S.savingsLedger.some(e=>e.id==="auto-"+date+"-emergency"))return;
+  const desc="Auto: income "+fmtD(date);
+  S.savingsLedger.push({id:"auto-"+date+"-emergency",date,account:"emergency",type:"credit",desc,amount:B.emergency});
+  S.savingsLedger.push({id:"auto-"+date+"-play",     date,account:"play",     type:"credit",desc,amount:B.play});
+  if(!S.transactions.some(t=>t.id==="auto-"+date+"-sup"))
+    S.transactions.push({id:"auto-"+date+"-sup",date,desc:"Auto: Super salary sacrifice",type:"Investment",category:"Superannuation",amount:200});
+}
+
+// date range helpers
+function getRange(filter){
+  const now=new Date();now.setHours(0,0,0,0);
+  const y=now.getFullYear(),m=now.getMonth();
+  if(filter==="cycle"){const c=getCycle();return{start:c.start,end:c.end};}
+  if(filter==="month"){const s=new Date(y,m,1),e=new Date(y,m+1,0);return{start:s.toISOString().slice(0,10),end:e.toISOString().slice(0,10)};}
+  if(filter==="lastmonth"){const s=new Date(y,m-1,1),e=new Date(y,m,0);return{start:s.toISOString().slice(0,10),end:e.toISOString().slice(0,10)};}
+  if(filter==="thisyear"){return{start:new Date(y,0,1).toISOString().slice(0,10),end:new Date(y,11,31).toISOString().slice(0,10)};}
+  if(filter==="finyear"){
+    const fs=m>=6?new Date(y,6,1):new Date(y-1,6,1);
+    const fe=m>=6?new Date(y+1,5,30):new Date(y,5,30);
+    return{start:fs.toISOString().slice(0,10),end:fe.toISOString().slice(0,10)};
+  }
+  return{start:null,end:null};
+}
+function filterTx(filter){
+  const{start,end}=getRange(filter);
+  if(!start)return S.transactions;
+  return S.transactions.filter(t=>t.date>=start&&t.date<=end);
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────
+function go(name){
+  TABS.forEach(t=>{
+    const el=$("tab-"+t);if(el)el.style.display=t===name?"block":"none";
+  });
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("on",b.dataset.tab===name));
+  if(name==="budget")    renderBudget();
+  else if(name==="savings")   renderSavings();
+  else if(name==="tracker")   renderTracker();
+  else if(name==="dashboard") renderDashboard();
+  else if(name==="settings")  renderSettings();
+}
+
+// ── BUDGET ────────────────────────────────────────────────────────────────
+function renderBudget(){
+  const{start,end}=getCycle();
+  const cy=S.transactions.filter(t=>t.date>=start&&t.date<=end);
+  const sum=(types,cats)=>cy.filter(t=>types.includes(t.type)&&(!cats||cats.includes(t.category))).reduce((a,b)=>a+b.amount,0);
+  const act={
+    mortgage:sum(["Fixed Bills"],["Mortgage"]),
+    bills:sum(["Variable Bills","Fixed Bills","Subscriptions"],null)-sum(["Fixed Bills"],["Mortgage"]),
+    personal:sum(["Expense"],["Personal Spending"]),
+    sup:sum(["Investment"],["Superannuation"]),
+    etf:sum(["Investment"],["ETF"]),
+  };
+  const brow=(label,actual,budget)=>{
+    const over=actual>budget;
+    return`<div class="brow"><span class="brow-label">${label}</span>
+      <div class="brow-right">
+        <span class="brow-actual" style="color:${over?"#C04A20":"#085041"}">${fmt(actual)}</span>
+        <span class="brow-budget">/ ${fmt(budget)}</span>
+        <span class="pill ${over?"pill-over":"pill-ok"}">${over?"OVER":"OK"}</span>
+      </div></div>`;
+  };
+  const pbar=(label,actual,budget)=>{
+    const pct=Math.min(100,budget>0?actual/budget*100:0),over=actual>budget;
+    return`<div class="pbar-wrap"><div class="pbar-top">
+        <span style="font-size:13px;color:${over?"#C04A20":"#2C2C2A"}">${label}</span>
+        <span style="font-size:12px;color:${over?"#C04A20":"#8A8880"}">${fmt(actual)} / ${fmt(budget)}</span>
+      </div><div class="pbar-track"><div class="pbar-fill" style="width:${pct}%;background:${over?"#D85A30":"#1D9E75"}"></div></div></div>`;
+  };
+  const casualRows=S.casualIncome.map(c=>{
+    const w=wf(c.amount);
+    return`<div class="brow" style="flex-wrap:wrap;gap:6px">
+      <div><span style="font-size:13px;font-weight:600">${fmt(c.amount)}</span><br><span style="font-size:11px;color:#8A8880">${fmtD(c.date)}</span></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-left:auto">
+        <span style="font-size:12px;color:#C04A20">🏖 ${fmt(w.h)}</span>
+        <span style="font-size:12px;color:#185FA5">📚 ${fmt(w.sd)}</span>
+        <span style="font-size:12px;color:#3B6D11">Super ${fmt(w.sup)}</span>
+        <span style="font-size:12px;color:#BA7517">ETF ${fmt(w.etf)}</span>
+        ${c.wfCredited?`<span class="credited-lbl">credited ✓</span>`:`<button class="credit-btn" data-wf="${c.id}">Credit →</button>`}
+        <button class="del" data-del-casual="${c.id}">×</button>
+      </div></div>`;
+  }).join("");
+
+  $("tab-budget").innerHTML=`
+    <div class="card">
+      <div class="card-title">Fortnightly Income</div>
+      <div class="income-display" id="inc-display">
+        <span class="income-big">${fmtN(S.income)}</span>
+        <span style="color:#5F5E5A;font-size:13px">per fortnight · paid ${fmtD(S.incomeDay)}</span>
+        <button class="edit-link" id="inc-edit-btn">edit</button>
+      </div>
+      <div class="income-edit-form" id="inc-edit">
+        <div class="form-grid" style="margin-top:10px">
+          <div class="fld"><label>Amount ($)</label><input type="number" id="inc-amt" value="${S.income}"></div>
+          <div class="fld"><label>Income date</label><input type="date" id="inc-date" value="${S.incomeDay}"></div>
+        </div>
+        <div style="font-size:12px;color:#8A8880;background:#F9F8F5;padding:8px;border-radius:8px;margin-bottom:8px">
+          Saving a new date auto-credits Emergency Fund ($64), Play ($150.10) and Super ($200).
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ghost" id="inc-cancel-btn">Cancel</button>
+          <button class="btn btn-primary" id="inc-save-btn">Save</button>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#8A8880;margin-bottom:8px">Active cycle: <strong style="color:#1E1E1C">${fmtD(start)} – ${fmtD(end)}</strong></div>
+    <div class="card"><div class="card-title">Spending this cycle</div>
+      ${brow("Mortgage",act.mortgage,B.mortgage)}
+      ${brow("Bills & Subscriptions",act.bills,B.bills)}
+      ${brow("Personal Spending",act.personal,B.personalSpending)}
+      ${brow("Superannuation",act.sup,B.sup)}
+      ${brow("ETF",act.etf,B.etf)}
+    </div>
+    <div class="card"><div class="card-title">Savings balances</div>
+      ${ACCS.map(a=>`<div class="brow"><span class="brow-label">${a.icon} ${a.label}</span>
+        <div class="brow-right"><span class="brow-actual" style="color:${bal(a.key)<0?"#C04A20":"#085041"}">${fmt(bal(a.key))}</span>
+        <span class="brow-budget">${a.auto?"auto-credited":"manual"}</span></div></div>`).join("")}
+    </div>
+    <div class="card"><div class="card-title">Progress vs budget</div>
+      ${pbar("Mortgage",act.mortgage,B.mortgage)}
+      ${pbar("Bills & Subscriptions",act.bills,B.bills)}
+      ${pbar("Personal Spending",act.personal,B.personalSpending)}
+      ${pbar("Superannuation",act.sup,B.sup)}
+      ${pbar("ETF",act.etf,B.etf)}
+    </div>
+    <div class="card"><div class="card-title">Casual Income Log</div>
+      <div class="form-grid" style="margin-bottom:10px">
+        <div class="fld"><label>Date</label><input type="date" id="cas-date" value="${today()}"></div>
+        <div class="fld"><label>Amount ($)</label><input type="number" id="cas-amt" placeholder="e.g. 280"></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:10px" id="cas-add-btn">+ Log Casual Income</button>
+      <div class="wf-hint">Waterfall: first $50 → Holiday · next $100 → Self-Dev · remainder 50/50 → Super &amp; ETF</div>
+      ${S.casualIncome.length===0?'<div class="empty">No casual income yet.</div>':casualRows}
+    </div>`;
+
+  // wire income edit
+  $("inc-edit-btn").addEventListener("click",()=>{$("inc-edit").classList.add("open");$("inc-display").style.display="none";});
+  $("inc-cancel-btn").addEventListener("click",()=>{$("inc-edit").classList.remove("open");$("inc-display").style.display="flex";});
+  $("inc-save-btn").addEventListener("click",()=>{
+    const v=parseFloat($("inc-amt").value),d=$("inc-date").value;
+    if(!isNaN(v)&&v>0)S.income=v;
+    if(d){S.incomeDay=d;autoCredit(d);}
+    save();$("inc-edit").classList.remove("open");$("inc-display").style.display="flex";renderBudget();
+  });
+  $("cas-add-btn").addEventListener("click",()=>{
+    const date=$("cas-date").value,amt=parseFloat($("cas-amt").value);
+    if(!date||isNaN(amt)||amt<=0)return alert("Enter a valid date and amount.");
+    S.casualIncome.push({id:"c"+Date.now(),date,amount:amt,wfCredited:false});
+    save();renderBudget();
+  });
+  document.querySelectorAll("[data-del-casual]").forEach(b=>b.addEventListener("click",()=>{
+    S.casualIncome=S.casualIncome.filter(c=>c.id!==b.dataset.delCasual);save();renderBudget();
+  }));
+  document.querySelectorAll("[data-wf]").forEach(b=>b.addEventListener("click",()=>{
+    const c=S.casualIncome.find(x=>x.id===b.dataset.wf);if(!c)return;
+    const w=wf(c.amount),desc="Casual waterfall "+fmtD(c.date);
+    if(w.h>0)S.savingsLedger.push({id:"wfh-"+c.id,date:c.date,account:"holiday",type:"credit",desc:desc+" — Holiday",amount:w.h});
+    if(w.sd>0)S.savingsLedger.push({id:"wfs-"+c.id,date:c.date,account:"selfdev",type:"credit",desc:desc+" — Self-Dev",amount:w.sd});
+    c.wfCredited=true;save();renderBudget();
+  }));
+}
+
+// ── SAVINGS ───────────────────────────────────────────────────────────────
+function renderSavings(){
+  const totalBal=ACCS.reduce((a,acc)=>a+bal(acc.key),0);
+  const cards=ACCS.map(a=>{
+    const b=bal(a.key),cr=creds(a.key),dr=debs(a.key);
+    const ledger=[...S.savingsLedger].filter(e=>e.account===a.key).sort((x,y)=>y.date.localeCompare(x.date));
+    const rows=ledger.map(e=>`<div class="ledger-row">
+      <div><div>${e.desc}</div><div style="font-size:11px;color:#8A8880">${fmtD(e.date)}</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="${e.type==="credit"?"cr":"dr"}">${e.type==="credit"?"+":"-"}${fmt(e.amount)}</span>
+        <button class="del" data-del-ledger="${e.id}">×</button>
+      </div></div>`).join("");
+    return`<div class="card">
+      <div class="acc ${a.cls}" data-toggle="led-${a.key}">
+        <div class="acc-name">${a.icon} ${a.label}</div>
+        <div class="acc-bal">${fmt(b)}</div>
+        <div class="acc-meta"><span>In ${fmt(cr)}</span><span>Out ${fmt(dr)}</span><span>tap for history ↓</span></div>
+      </div>
+      <div class="ledger-panel" id="led-${a.key}">
+        <div style="padding:10px 0 4px">
+          ${!a.auto?`<div style="margin-bottom:10px">
+            <div style="font-size:12px;color:#8A8880;margin-bottom:6px">Add manual credit</div>
+            <div style="display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:flex-end">
+              <div class="fld"><label>Date</label><input type="date" id="mc-date-${a.key}" value="${today()}"></div>
+              <div class="fld"><label>Description</label><input type="text" id="mc-desc-${a.key}" placeholder="e.g. Casual waterfall"></div>
+              <button class="btn btn-primary btn-sm" data-mc="${a.key}">+ Credit</button>
+            </div>
+            <div style="margin-top:6px"><div class="fld"><label>Amount ($)</label><input type="number" id="mc-amt-${a.key}" placeholder="0.00" style="max-width:160px"></div></div>
+          </div>`:""}
+          ${ledger.length===0?`<div class="empty" style="padding:1rem">No entries yet.</div>`:rows}
+        </div>
+      </div></div>`;
+  }).join("");
+
+  $("tab-savings").innerHTML=`
+    <div class="card" style="background:#085041;border:none">
+      <div style="color:rgba(255,255,255,.7);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Total Savings</div>
+      <div style="color:#fff;font-size:34px;font-weight:700">${fmt(totalBal)}</div>
+      <div style="color:rgba(255,255,255,.6);font-size:12px;margin-top:4px">tap any account to see history</div>
+    </div>
+    <div style="font-size:12px;color:#8A8880;margin-bottom:10px;background:#fff;padding:10px 12px;border-radius:10px;border:1px solid #E2E0D8">
+      💡 To spend from savings: Tracker tab → Type = <em>Savings Debit</em> → pick account → enter amount.
+    </div>
+    ${cards}`;
+
+  document.querySelectorAll("[data-toggle]").forEach(el=>el.addEventListener("click",()=>$(el.dataset.toggle).classList.toggle("open")));
+  document.querySelectorAll("[data-del-ledger]").forEach(b=>b.addEventListener("click",()=>{
+    S.savingsLedger=S.savingsLedger.filter(e=>e.id!==b.dataset.delLedger);save();renderSavings();
+  }));
+  document.querySelectorAll("[data-mc]").forEach(b=>b.addEventListener("click",()=>{
+    const key=b.dataset.mc;
+    const date=$(`mc-date-${key}`)?.value;
+    const desc=$(`mc-desc-${key}`)?.value.trim()||"Manual credit";
+    const amt=parseFloat($(`mc-amt-${key}`)?.value);
+    if(!date||isNaN(amt)||amt<=0)return alert("Enter date and amount.");
+    S.savingsLedger.push({id:"mc-"+Date.now(),date,account:key,type:"credit",desc,amount:amt});
+    save();renderSavings();
+  }));
+}
+
+// ── TRACKER ───────────────────────────────────────────────────────────────
+function renderTracker(){
+  const all=[
+    ...S.transactions.map(t=>({...t,_ledger:false})),
+    ...S.savingsLedger.map(e=>({
+      id:e.id,date:e.date,desc:e.desc,
+      type:e.type==="credit"?"Savings Credit":"Savings Debit",
+      category:ACCS.find(a=>a.key===e.account)?.label||e.account,
+      amount:e.amount,_ledger:true
+    }))
+  ].sort((a,b)=>b.date.localeCompare(a.date));
+
+  const rows=all.map(t=>`<tr id="row-${t.id}">
+    <td style="white-space:nowrap;color:#8A8880">${fmtD(t.date)}</td>
+    <td>${t.desc}</td>
+    <td><span class="type-chip" style="${CHIP[t.type]||''}">${t.type}</span></td>
+    <td style="color:#5F5E5A">${t.category}</td>
+    <td style="font-weight:600;color:${t.type==="Savings Debit"?"#C04A20":"#085041"};text-align:right">${t.type==="Savings Debit"?"-":""}${fmt(t.amount)}</td>
+    <td style="text-align:right;white-space:nowrap">
+      <button class="del" style="color:#0F6E56;font-size:13px;padding:0 4px" data-edit="${t.id}" data-ledger="${t._ledger}">✏️</button>
+      <button class="del" data-del="${t.id}" data-ledger="${t._ledger}">×</button>
+    </td></tr>`).join("");
+
+  $("tab-tracker").innerHTML=`
+    <button class="add-fab" id="fab">＋ Add Transaction</button>
+    <div class="tx-form" id="tx-form">
+      <div class="card-title" style="margin-bottom:10px">New Transaction</div>
+      <div class="form-grid">
+        <div class="fld"><label>Date</label><input type="date" id="tx-date" value="${today()}"></div>
+        <div class="fld"><label>Description</label><input type="text" id="tx-desc" placeholder="e.g. Woolworths"></div>
+        <div class="fld"><label>Type</label><select id="tx-type">${Object.keys(TYPE_CATS).map(t=>`<option>${t}</option>`).join("")}</select></div>
+        <div class="fld"><label>Category</label><select id="tx-cat"></select></div>
+        <div class="fld"><label>Amount ($)</label><input type="number" id="tx-amt" placeholder="0.00"></div>
+      </div>
+      <div id="sav-hint" style="display:none;font-size:12px;color:#8A8880;background:#F9F8F5;padding:8px;border-radius:8px;margin-bottom:10px">
+        Savings Debit deducts from the account balance and shows as a withdrawal in the Savings tab.
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" id="tx-cancel">Cancel</button>
+        <button class="btn btn-primary" id="tx-save">Save</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">All transactions</div>
+      ${all.length===0?`<div class="empty">No transactions yet.</div>`:`
+      <div class="tx-list"><table>
+        <thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Category</th><th style="text-align:right">Amount</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`}
+    </div>`;
+
+  // wire fab
+  $("fab").addEventListener("click",()=>{
+    const open=$("tx-form").classList.toggle("open");
+    $("fab").textContent=open?"✕ Cancel":"＋ Add Transaction";
+  });
+  $("tx-cancel").addEventListener("click",()=>{$("tx-form").classList.remove("open");$("fab").textContent="＋ Add Transaction";});
+
+  // type change
+  const updateCats=()=>{
+    const type=$("tx-type").value;
+    $("tx-cat").innerHTML=(TYPE_CATS[type]||[]).map(c=>`<option>${c}</option>`).join("");
+    $("sav-hint").style.display=(type==="Savings Debit"||type==="Savings Credit")?"block":"none";
+  };
+  $("tx-type").addEventListener("change",updateCats);
+  updateCats();
+
+  // save tx
+  $("tx-save").addEventListener("click",()=>{
+    const date=$("tx-date").value,desc=$("tx-desc").value.trim();
+    const type=$("tx-type").value,cat=$("tx-cat").value;
+    const amt=parseFloat($("tx-amt").value);
+    if(!date||!desc||isNaN(amt)||amt<=0)return alert("Please fill in all fields.");
+    if(type==="Savings Debit"||type==="Savings Credit"){
+      const key=CAT_TO_KEY[cat]||cat.toLowerCase();
+      S.savingsLedger.push({id:"sl-"+Date.now(),date,account:key,type:type==="Savings Credit"?"credit":"debit",desc,amount:amt});
+    } else {
+      S.transactions.push({id:"t"+Date.now(),date,desc,type,category:cat,amount:amt});
+    }
+    save();renderTracker();
+  });
+
+  // delete
+  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+    const isLedger=b.dataset.ledger==="true";
+    if(isLedger) S.savingsLedger=S.savingsLedger.filter(e=>e.id!==b.dataset.del);
+    else S.transactions=S.transactions.filter(t=>t.id!==b.dataset.del);
+    save();renderTracker();
+  }));
+
+  // edit
+  document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.edit,isLedger=b.dataset.ledger==="true";
+    const rec=isLedger?S.savingsLedger.find(e=>e.id===id):S.transactions.find(t=>t.id===id);
+    if(!rec)return;
+    const row=$("row-"+id);if(!row)return;
+    row.innerHTML=`<td colspan="5" style="padding:8px 6px">
+      <div style="display:grid;grid-template-columns:120px 1fr 110px auto;gap:8px;align-items:flex-end">
+        <div class="fld"><label>Date</label><input type="date" id="ed-date-${id}" value="${rec.date}"></div>
+        <div class="fld"><label>Description</label><input type="text" id="ed-desc-${id}" value="${rec.desc}"></div>
+        <div class="fld"><label>Amount ($)</label><input type="number" id="ed-amt-${id}" value="${rec.amount}"></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" id="ed-save-${id}">Save</button>
+          <button class="btn btn-ghost btn-sm" id="ed-cancel-${id}">Cancel</button>
+        </div>
+      </div></td><td></td>`;
+    $(`ed-cancel-${id}`).addEventListener("click",renderTracker);
+    $(`ed-save-${id}`).addEventListener("click",()=>{
+      const date=$(`ed-date-${id}`).value,desc=$(`ed-desc-${id}`).value.trim(),amt=parseFloat($(`ed-amt-${id}`).value);
+      if(!date||!desc||isNaN(amt)||amt<=0)return alert("Fill in all fields.");
+      if(isLedger){const e=S.savingsLedger.find(x=>x.id===id);if(e){e.date=date;e.desc=desc;e.amount=amt;}}
+      else{const t=S.transactions.find(x=>x.id===id);if(t){t.date=date;t.desc=desc;t.amount=amt;}}
+      save();renderTracker();
+    });
+  }));
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+let dashFilter="alltime";
+function renderDashboard(){
+  const tx=filterTx(dashFilter);
+  const ob=S.openingBalances||{};
+  const sum=(types,cats)=>tx.filter(t=>types.includes(t.type)&&(!cats||cats.includes(t.category))).reduce((a,b)=>a+b.amount,0);
+  const wfT=S.casualIncome.reduce((acc,c)=>{const w=wf(c.amount);return{h:acc.h+w.h,sd:acc.sd+w.sd,sup:acc.sup+w.sup,etf:acc.etf+w.etf};},{h:0,sd:0,sup:0,etf:0});
+  const casTotal=S.casualIncome.reduce((a,b)=>a+b.amount,0);
+  const totalInc=S.income+casTotal+(ob.casualIncome||0);
+  const totalExp=sum(["Expense","Fixed Bills","Variable Bills","Subscriptions"],null)+(dashFilter==="alltime"?(ob.mortgage||0)+(ob.fixedBills||0)+(ob.varBills||0)+(ob.subs||0)+(ob.personal||0):0);
+  const totalInv=sum(["Investment"],null)+(dashFilter==="alltime"?(ob.sup||0)+(ob.etf||0):0);
+  const net=totalInc-totalExp-totalInv;
+  const supAll=sum(["Investment"],["Superannuation"])+(dashFilter==="alltime"?(ob.sup||0):0)+wfT.sup;
+  const etfAll=sum(["Investment"],["ETF"])+(dashFilter==="alltime"?(ob.etf||0):0)+wfT.etf;
+  const savBal=ACCS.reduce((a,acc)=>a+bal(acc.key),0);
+
+  const filterLabels=[["cycle","This Cycle"],["month","This Month"],["lastmonth","Last Month"],["thisyear","This Year"],["finyear","Fin Year"],["alltime","All Time"]];
+
+  function donut(title,segments,total){
+    if(total<=0)return`<div class="donut-card"><div class="donut-title">${title}</div><div class="empty" style="padding:1rem">No data</div></div>`;
+    const colours=["#0F6E56","#D85A30","#185FA5","#BA7517","#3B6D11","#534AB7","#854F0B","#C04A20"];
+    let offset=0,paths="",legends="";
+    const r=50,cx=70,cy=70,circ=2*Math.PI*r;
+    segments.forEach((seg,i)=>{
+      if(seg.value<=0)return;
+      const pct=seg.value/total,dash=pct*circ,col=colours[i%colours.length];
+      paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="18" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${circ*0.25-offset*circ/100}" transform="rotate(-90 ${cx} ${cy})"/>`;
+      offset+=pct*100;
+      legends+=`<div class="legend-item"><span class="legend-dot" style="background:${col}"></span><span>${seg.label}</span><span class="legend-pct">${(pct*100).toFixed(1)}%</span></div>`;
+    });
+    return`<div class="donut-card"><div class="donut-title">${title}</div>
+      <div class="donut-container"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="50" fill="none" stroke="#F2F0EA" stroke-width="18"/>${paths}</svg>
+        <div class="donut-centre"><div class="donut-centre-val">${fmt(total)}</div><div class="donut-centre-lbl">total</div></div>
+      </div><div class="legend">${legends}</div></div>`;
+  }
+
+  const expSegs=[
+    {label:"Mortgage",      value:sum(["Fixed Bills"],["Mortgage"])+(dashFilter==="alltime"?(ob.mortgage||0):0)},
+    {label:"Fixed Bills",   value:sum(["Fixed Bills"],null)-sum(["Fixed Bills"],["Mortgage"])+(dashFilter==="alltime"?(ob.fixedBills||0):0)},
+    {label:"Variable Bills",value:sum(["Variable Bills"],null)+(dashFilter==="alltime"?(ob.varBills||0):0)},
+    {label:"Subscriptions", value:sum(["Subscriptions"],null)+(dashFilter==="alltime"?(ob.subs||0):0)},
+    {label:"Personal",      value:sum(["Expense"],["Personal Spending"])+(dashFilter==="alltime"?(ob.personal||0):0)},
+    {label:"Other",         value:sum(["Expense"],["Other"])},
+  ].filter(s=>s.value>0);
+  const incSegs=[{label:"Permanent",value:S.income},{label:"Casual",value:casTotal+(ob.casualIncome||0)}].filter(s=>s.value>0);
+  const invSegs=[
+    {label:"Super (salary)",value:sum(["Investment"],["Superannuation"])+(dashFilter==="alltime"?(ob.sup||0):0)},
+    {label:"Super (casual)",value:wfT.sup},
+    {label:"ETF (budget)",  value:sum(["Investment"],["ETF"])+(dashFilter==="alltime"?(ob.etf||0):0)},
+    {label:"ETF (casual)",  value:wfT.etf},
+  ].filter(s=>s.value>0);
+  const savSegs=ACCS.map(a=>({label:a.label,value:Math.max(0,bal(a.key))})).filter(s=>s.value>0);
+  const eRow=(l,v)=>v>0?`<div class="brow"><span class="brow-label">${l}</span><span class="brow-actual" style="color:#C04A20">${fmt(v)}</span></div>`:"";
+
+  $("tab-dashboard").innerHTML=`
+    <div class="filter-bar" id="dash-filters">
+      ${filterLabels.map(([k,l])=>`<button class="filter-btn${dashFilter===k?" on":""}" data-filter="${k}">${l}</button>`).join("")}
+    </div>
+    ${S.openingBalances?`<div style="font-size:12px;color:#8A8880;background:#E1F5EE;padding:8px 12px;border-radius:8px;margin-bottom:12px;border:1px solid #9ADBC4">
+      ✓ Opening balances as of ${fmtD(S.openingBalances.date)}. <button class="edit-link" id="ob-edit-link">Edit</button></div>`:""}
+    <div class="stat-row">
+      <div class="stat"><div class="stat-lbl">📥 Income</div><div class="stat-val" style="color:#0A5C44">${fmt(totalInc)}</div><div class="stat-sub">Permanent + casual</div></div>
+      <div class="stat"><div class="stat-lbl">📤 Expenses</div><div class="stat-val" style="color:#C04A20">${fmt(totalExp)}</div></div>
+      <div class="stat"><div class="stat-lbl">📈 Invested</div><div class="stat-val" style="color:#3B6D11">${fmt(totalInv)}</div></div>
+      <div class="stat"><div class="stat-lbl">💹 Net</div><div class="stat-val" style="color:${net>=0?"#0A5C44":"#C04A20"}">${fmt(net)}</div><div class="stat-sub">${net>=0?"Surplus":"Shortfall"}</div></div>
+    </div>
+    <div class="donut-wrap">${donut("Income Ratio",incSegs,totalInc)}${donut("Expense Ratio",expSegs,totalExp)}</div>
+    <div class="donut-wrap">${donut("Investment Ratio",invSegs,totalInv)}${donut("Savings Ratio",savSegs,savBal)}</div>
+    <div class="card"><div class="card-title">Investments breakdown</div>
+      <div class="brow"><span class="brow-label">Super (salary sacrifice)</span><span class="brow-actual" style="color:#3B6D11">${fmt(sum(["Investment"],["Superannuation"])+(dashFilter==="alltime"?(ob.sup||0):0))}</span></div>
+      <div class="brow"><span class="brow-label">Super (casual waterfall)</span><span class="brow-actual" style="color:#3B6D11">${fmt(wfT.sup)}</span></div>
+      <div class="brow" style="background:#EAF3DE;border-radius:8px;padding:8px 10px"><span style="font-weight:600">Total Super</span><span class="brow-actual" style="color:#3B6D11;font-size:17px">${fmt(supAll)}</span></div>
+      <div style="margin-top:8px"></div>
+      <div class="brow"><span class="brow-label">ETF (budget)</span><span class="brow-actual" style="color:#BA7517">${fmt(sum(["Investment"],["ETF"])+(dashFilter==="alltime"?(ob.etf||0):0))}</span></div>
+      <div class="brow"><span class="brow-label">ETF (casual waterfall)</span><span class="brow-actual" style="color:#BA7517">${fmt(wfT.etf)}</span></div>
+      <div class="brow" style="background:#FEF3E2;border-radius:8px;padding:8px 10px"><span style="font-weight:600">Total ETF</span><span class="brow-actual" style="color:#BA7517;font-size:17px">${fmt(etfAll)}</span></div>
+    </div>
+    <div class="card"><div class="card-title">Savings accounts</div>
+      ${ACCS.map(a=>{const b=bal(a.key);return`<div class="brow"><span class="brow-label">${a.icon} ${a.label}</span>
+        <div class="brow-right"><span class="brow-actual" style="color:${b<0?"#C04A20":"#085041"}">${fmt(b)}</span>
+        <span class="brow-budget">In ${fmt(creds(a.key))} · Out ${fmt(debs(a.key))}</span></div></div>`;}).join("")}
+      <div class="brow" style="background:#E1F5EE;border-radius:8px;padding:8px 10px;margin-top:6px"><span style="font-weight:600">Total Savings</span><span class="brow-actual" style="color:#085041;font-size:17px">${fmt(savBal)}</span></div>
+    </div>
+    <div class="card"><div class="card-title">Expenses breakdown</div>
+      <div style="font-size:11px;font-weight:700;color:#185FA5;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Fixed Bills</div>
+      ${eRow("Mortgage",sum(["Fixed Bills"],["Mortgage"])+(dashFilter==="alltime"?(ob.mortgage||0):0))}
+      ${eRow("Health Insurance",sum(["Fixed Bills"],["Health Insurance"]))}
+      ${eRow("Body Corporate",sum(["Fixed Bills"],["Body Corporate"]))}
+      ${eRow("Council Rates",sum(["Fixed Bills"],["Council Rates"]))}
+      <div style="font-size:11px;font-weight:700;color:#534AB7;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px">Variable Bills</div>
+      ${eRow("Electricity",sum(["Variable Bills"],["Electricity"]))}
+      ${eRow("Water",sum(["Variable Bills"],["Water"]))}
+      ${eRow("Mobile",sum(["Variable Bills"],["Mobile"]))}
+      ${eRow("Internet",sum(["Variable Bills"],["Internet"]))}
+      <div style="font-size:11px;font-weight:700;color:#854F0B;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px">Subscriptions</div>
+      ${eRow("All Subscriptions",sum(["Subscriptions"],null)+(dashFilter==="alltime"?(ob.subs||0):0))}
+      <div style="font-size:11px;font-weight:700;color:#993C1D;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px">Lifestyle</div>
+      ${eRow("Personal Spending",sum(["Expense"],["Personal Spending"])+(dashFilter==="alltime"?(ob.personal||0):0))}
+      <div class="brow" style="background:#FAECE7;border-radius:8px;padding:8px 10px;margin-top:8px"><span style="font-weight:600">Total</span><span class="brow-actual" style="color:#C04A20;font-size:17px">${fmt(totalExp)}</span></div>
+    </div>`;
+
+  document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{dashFilter=b.dataset.filter;renderDashboard();}));
+  const oel=$("ob-edit-link");if(oel)oel.addEventListener("click",showOB);
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+function renderSettings(){
+  const connected=!!S.syncUrl;
+  const lastSync=S.lastSynced?new Date(S.lastSynced).toLocaleString("en-AU"):"Never";
+  $("tab-settings").innerHTML=`
+    <div class="card">
+      <div class="card-title">☁️ Google Sheets Sync</div>
+      <div style="font-size:13px;color:#5F5E5A;margin-bottom:14px;line-height:1.6">Sync your data across all devices using a free Google Sheet.</div>
+      ${connected
+        ?`<div style="background:#E1F5EE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#0A5C44;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+            <span>✓ Connected to Google Sheets</span><span style="font-size:11px;color:#5F5E5A">Last sync: ${lastSync}</span></div>`
+        :`<div style="background:#FEF3E2;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#854F0B">
+            ⚠️ Not connected. Follow the steps below then paste your URL here.</div>`}
+      <div class="form-grid" style="margin-bottom:12px">
+        <div class="fld" style="grid-column:1/-1">
+          <label>Google Apps Script Web App URL</label>
+          <input type="text" id="settings-sync-url" value="${S.syncUrl||''}" placeholder="https://script.google.com/macros/s/... ← paste here">
+        </div>
+        <div class="fld">
+          <label>Sync PIN</label>
+          <input type="password" id="settings-sync-pin" value="${S.syncPin||''}" placeholder="Enter your PIN">
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <div style="font-size:12px;color:#8A8880;padding-bottom:4px">Set the same PIN in your Apps Script file (<code>SYNC_PIN = "..."</code>)</div>
+        </div>
+      </div>
+      <div id="settings-sync-status" style="display:none;padding:10px;border-radius:8px;font-size:13px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btn-save-test">Save &amp; Test Connection</button>
+        ${connected?`<button class="btn btn-primary" id="btn-sync-now" style="background:#185FA5;border-color:#185FA5">☁️ Sync Now</button>`:""}
+        ${connected?`<button class="btn btn-ghost" id="btn-disconnect">Disconnect</button>`:""}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Setup steps</div>
+      <div style="font-size:13px;color:#2C2C2A;line-height:2.2">
+        <div style="display:flex;align-items:center"><span class="step-num">1</span>Go to <strong>sheets.google.com</strong> → create a new blank sheet</div>
+        <div style="display:flex;align-items:center"><span class="step-num">2</span>Click <strong>Extensions → Apps Script</strong></div>
+        <div style="display:flex;align-items:center"><span class="step-num">3</span>Delete all default code, paste in the script Claude gave you</div>
+        <div style="display:flex;align-items:center"><span class="step-num">4</span>Click <strong>Deploy → New deployment → Web app</strong></div>
+        <div style="display:flex;align-items:center"><span class="step-num">5</span>Set <strong>Execute as: Me</strong> · <strong>Who has access: Anyone</strong> → Deploy</div>
+        <div style="display:flex;align-items:center"><span class="step-num">6</span>Copy the <strong>Web App URL</strong> → paste above → Save &amp; Test</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📱 Using on iPhone</div>
+      <div style="font-size:13px;color:#2C2C2A;line-height:2.2">
+        <div style="display:flex;align-items:center"><span class="step-num">1</span>Complete setup on your computer first</div>
+        <div style="display:flex;align-items:center"><span class="step-num">2</span>Save this HTML file to <strong>iCloud Drive</strong></div>
+        <div style="display:flex;align-items:center"><span class="step-num">3</span>Open it in Safari on iPhone → Share → <strong>Add to Home Screen</strong></div>
+        <div style="display:flex;align-items:center"><span class="step-num">4</span>Go to ⚙️ Settings → paste the <strong>same URL</strong> → Save &amp; Test</div>
+        <div style="display:flex;align-items:center"><span class="step-num">5</span>Tap <strong>Sync Now</strong> on any device to stay up to date</div>
+      </div>
+    </div>`;
+
+  $("btn-save-test").addEventListener("click", async()=>{
+    const url=$("settings-sync-url").value.trim();
+    const pin=$("settings-sync-pin").value.trim();
+    if(!url)return alert("Please paste your URL first.");
+    if(!pin)return alert("Please enter your sync PIN.");
+    S.syncUrl=url;S.syncPin=pin;save();
+    const st=$("settings-sync-status");
+    st.style.display="block";st.style.background="#F9F8F5";st.style.color="#2C2C2A";st.textContent="Testing connection...";
+    try{
+      const res=await fetch(url+"?action=ping");
+      const json=await res.json();
+      if(json.status==="ok"){
+        // test PIN with a pull
+        const res2=await fetch(url+"?action=pull&pin="+encodeURIComponent(pin));
+        const json2=await res2.json();
+        if(json2.status==="error"){
+          st.style.background="#FAECE7";st.style.color="#C04A20";
+          st.textContent="⚠️ Connected but PIN is wrong. Check the PIN matches your Apps Script SYNC_PIN.";
+        } else {
+          st.style.background="#E1F5EE";st.style.color="#0A5C44";
+          st.textContent="✓ Connected and PIN verified! Click Sync Now to sync your data.";
+          renderSettings();
+        }
+      } else throw new Error();
+    }catch(e){st.style.background="#FAECE7";st.style.color="#C04A20";st.textContent="⚠️ Could not connect. Check the URL and make sure access is set to 'Anyone'.";}
+  });
+  const bsn=$("btn-sync-now");if(bsn)bsn.addEventListener("click",syncData);
+  const bdc=$("btn-disconnect");if(bdc)bdc.addEventListener("click",()=>{
+    if(!confirm("Disconnect sync? Local data is not affected."))return;
+    S.syncUrl="";S.lastSynced=null;save();renderSettings();
+  });
+}
+
+// ── SYNC ──────────────────────────────────────────────────────────────────
+async function syncData(){
+  if(!S.syncUrl){go("settings");return;}
+  if(!S.syncPin){alert("Please set your sync PIN in ⚙️ Settings first.");go("settings");return;}
+  const syncBtn=$("hdr-sync-btn");
+  if(syncBtn){syncBtn.textContent="⏳ Syncing...";syncBtn.disabled=true;}
+  try{
+    const pin=encodeURIComponent(S.syncPin);
+    const pullRes=await fetch(S.syncUrl+"?action=pull&pin="+pin);
+    const remote=await pullRes.json();
+    if(remote.status==="error"){
+      if(syncBtn){syncBtn.textContent="☁️ Sync";syncBtn.disabled=false;}
+      alert("Sync failed: Wrong PIN. Check your PIN in ⚙️ Settings.");return;
+    }
+    const exTx=new Set(S.transactions.map(t=>t.id));
+    const exLd=new Set(S.savingsLedger.map(e=>e.id));
+    const exCa=new Set(S.casualIncome.map(c=>c.id));
+    let merged=0;
+    (remote.transactions||[]).forEach(t=>{if(!exTx.has(t.id)){S.transactions.push(t);merged++;}});
+    (remote.savingsLedger||[]).forEach(e=>{if(!exLd.has(e.id)){S.savingsLedger.push(e);merged++;}});
+    (remote.casualIncome||[]).forEach(c=>{if(!exCa.has(c.id)){S.casualIncome.push(c);merged++;}});
+    if(!S.openingBalances&&remote.openingBalances)S.openingBalances=remote.openingBalances;
+    await fetch(S.syncUrl+"?action=push&pin="+pin,{method:"POST",body:JSON.stringify({transactions:S.transactions,savingsLedger:S.savingsLedger,casualIncome:S.casualIncome,openingBalances:S.openingBalances,income:S.income,incomeDay:S.incomeDay})});
+    S.lastSynced=new Date().toISOString();save();
+    if(syncBtn){syncBtn.textContent="☁️ Sync";syncBtn.disabled=false;}
+    alert(`Sync complete! ${merged>0?merged+" new records merged.":"Already up to date."}`);
+  }catch(e){
+    if(syncBtn){syncBtn.textContent="☁️ Sync";syncBtn.disabled=false;}
+    alert("Sync failed: "+e.message);
+  }
+}
+
+// ── OPENING BALANCES ──────────────────────────────────────────────────────
+function showOB(){
+  if(S.openingBalances){
+    const ob=S.openingBalances;
+    ["holiday","selfdev","emergency","play","sup","etf","mortgage","fixedbills","varbills","subs","personal","casual"].forEach(k=>{
+      const el=$("ob-"+k);if(el)el.value=ob[k]||0;
+    });
+    const d=$("ob-date");if(d)d.value=ob.date||today();
+  } else {
+    $("ob-date").value=today();
+  }
+  $("ob-overlay").classList.add("open");
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+S.savingsLedger=S.savingsLedger.filter(e=>!e.id.endsWith("-sup"));
+S.transactions=S.transactions.filter(t=>!(t.id.endsWith("-sup")&&t.category!=="Superannuation"));
+autoCredit(S.incomeDay);
+save();
+
+// build tab bar
+const tabBar=$("tab-bar");
+TABS.forEach(t=>{
+  const b=document.createElement("button");
+  b.className="tab-btn"+(t==="budget"?" on":"");
+  b.dataset.tab=t;
+  b.textContent=TAB_LABELS[t];
+  b.addEventListener("click",()=>go(t));
+  tabBar.appendChild(b);
+});
+
+// build header buttons
+const hb=$("hdr-btns");
+[
+  {txt:"⬇ Export", cls:"hdr-btn", fn:()=>{
+    try{
+      const json=JSON.stringify({...S,exportedAt:new Date().toISOString()},null,2);
+      // try download first
+      try{
+        const blob=new Blob([json],{type:"application/json"});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement("a");a.href=url;a.download="pinnie_finance_hub_"+today()+".json";a.click();URL.revokeObjectURL(url);
+      }catch(e){
+        // fallback: show in overlay
+        $("export-ta").value=json;
+        $("export-overlay").classList.add("open");
+        setTimeout(()=>$("export-ta").select(),100);
+      }
+    }catch(e){alert("Export error: "+e.message);}
+  }},
+  {txt:"⬆ Import", cls:"hdr-btn", fn:()=>{
+    pendingImport=null;
+    $("import-file").value="";
+    $("import-preview").style.display="none";
+    $("import-error").style.display="none";
+    $("import-confirm").style.display="none";
+    $("import-overlay").classList.add("open");
+  }},
+  {txt:"☁️ Sync", cls:"hdr-btn", id:"hdr-sync-btn", fn:()=>S.syncUrl?syncData():go("settings")},
+  {txt:"📂 Balances", cls:"hdr-btn", fn:showOB},
+  {txt:"🗑 Reset", cls:"hdr-btn red", fn:()=>$("reset-overlay").classList.add("open")},
+].forEach(({txt,cls,fn,id})=>{
+  const b=document.createElement("button");b.className=cls;b.textContent=txt;
+  if(id)b.id=id;
+  b.addEventListener("click",fn);hb.appendChild(b);
+});
+
+// overlay wiring
+$("reset-cancel").addEventListener("click",()=>$("reset-overlay").classList.remove("open"));
+$("reset-confirm").addEventListener("click",()=>{
+  S={income:1914.10,incomeDay:"2026-06-09",transactions:[],savingsLedger:[],casualIncome:[],openingBalances:null,syncUrl:S.syncUrl||"",lastSynced:null};
+  try{localStorage.removeItem("pfh_v7");}catch(e){}
+  save();$("reset-overlay").classList.remove("open");go("budget");
+});
+$("export-close").addEventListener("click",()=>$("export-overlay").classList.remove("open"));
+$("export-copy").addEventListener("click",()=>{
+  $("export-ta").select();
+  try{document.execCommand("copy");alert("Copied!");}catch(e){alert("Please select all and copy manually.");}
+});
+$("ob-cancel").addEventListener("click",()=>$("ob-overlay").classList.remove("open"));
+$("ob-save").addEventListener("click",()=>{
+  const g=id=>parseFloat($(id)?.value||0)||0;
+  S.openingBalances={
+    date:$("ob-date")?.value||today(),
+    holiday:g("ob-holiday"),selfdev:g("ob-selfdev"),emergency:g("ob-emergency"),play:g("ob-play"),
+    sup:g("ob-sup"),etf:g("ob-etf"),
+    mortgage:g("ob-mortgage"),fixedBills:g("ob-fixedbills"),varBills:g("ob-varbills"),
+    subs:g("ob-subs"),personal:g("ob-personal"),casualIncome:g("ob-casual"),
+  };
+  save();$("ob-overlay").classList.remove("open");renderDashboard();
+});
+$("import-cancel").addEventListener("click",()=>$("import-overlay").classList.remove("open"));
+$("import-confirm").addEventListener("click",()=>{
+  if(!pendingImport)return;
+  const d=pendingImport;
+  const exTx=new Set(S.transactions.map(t=>t.id));
+  const exLd=new Set(S.savingsLedger.map(e=>e.id));
+  const exCa=new Set(S.casualIncome.map(c=>c.id));
+  d.transactions.forEach(t=>{if(!exTx.has(t.id))S.transactions.push(t);});
+  d.savingsLedger.forEach(e=>{if(!exLd.has(e.id))S.savingsLedger.push(e);});
+  d.casualIncome.forEach(c=>{if(!exCa.has(c.id))S.casualIncome.push(c);});
+  if(!S.openingBalances&&d.openingBalances)S.openingBalances=d.openingBalances;
+  if(d.income&&d.income>S.income)S.income=d.income;
+  save();$("import-overlay").classList.remove("open");pendingImport=null;
+  renderBudget();alert("Import complete! Data merged successfully.");
+});
+
+// import file reader
+let pendingImport=null;
+$("import-file").addEventListener("change",function(){
+  const file=this.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.transactions||!data.savingsLedger||!data.casualIncome)throw new Error("Not a valid Finance Hub export.");
+      pendingImport=data;
+      const newTx=data.transactions.filter(t=>!S.transactions.some(x=>x.id===t.id)).length;
+      const newLd=data.savingsLedger.filter(t=>!S.savingsLedger.some(x=>x.id===t.id)).length;
+      const newCa=data.casualIncome.filter(t=>!S.casualIncome.some(x=>x.id===t.id)).length;
+      $("import-preview").style.display="block";
+      $("import-error").style.display="none";
+      $("import-preview").innerHTML=`<div style="font-weight:600;margin-bottom:8px;color:#0A5C44">✓ Valid export file</div>
+        <div>📋 New transactions: <strong>${newTx}</strong></div>
+        <div>🏦 New ledger entries: <strong>${newLd}</strong></div>
+        <div>💼 New casual income: <strong>${newCa}</strong></div>
+        ${newTx+newLd+newCa===0?'<div style="margin-top:8px;color:#8A8880">Already up to date — no new records.</div>':""}`;
+      $("import-confirm").style.display="block";
+    }catch(err){
+      pendingImport=null;
+      $("import-preview").style.display="none";
+      $("import-error").style.display="block";
+      $("import-error").textContent="⚠️ "+err.message;
+      $("import-confirm").style.display="none";
+    }
+  };
+  reader.readAsText(file);
+});
+
+// render initial tab
+renderBudget();
+</script>
+</body>
+</html>
